@@ -24,20 +24,14 @@ def inicializar_servicios():
 # --- 2. LA FASE ESTRATÉGICA: PENSAR ANTES DE ACTUAR ---
 def generar_plan_de_caza(model_ia, que_vendes, cliente_ideal, ubicacion):
     print("\n🧠 Fase Estratégica: La IA está pensando...")
-    
     prompt = f"""
     Actúa como un director de estrategia de marketing de clase mundial.
     Mi cliente vende: "{que_vendes}".
     Su cliente ideal es: "{cliente_ideal}".
     La búsqueda se centrará en la siguiente ubicación: "{ubicacion}".
-
     Tu misión es crear un "Plan de Caza" en formato JSON. Este plan debe contener una lista de 5 a 10 términos de búsqueda para Google Maps que sean específicos, creativos y con alta probabilidad de encontrar clientes potenciales de calidad.
-    
-    Ejemplo: Si el cliente vende "software de gestión para restaurantes", no sugieras solo "restaurantes". Sugiere "restaurantes de alta cocina", "grupos de restaurantes", "nuevos restaurantes abiertos", "proveedores de catering".
-
     Genera únicamente el objeto JSON con una clave "plan_de_busqueda" que contenga la lista de términos.
     """
-    
     try:
         response = model_ia.generate_content(prompt)
         json_text = response.text.strip().replace('```json', '').replace('```', '')
@@ -75,12 +69,9 @@ def guardar_prospectos(supabase, prospectos, id_campana):
     contador_guardados = 0
     for lugar in prospectos:
         nuevo_prospecto = {
-            'campana_id': id_campana,
-            'nombre_negocio': lugar.get('title'),
-            'url_google_maps': lugar.get('url'),
-            'url_sitio_web': lugar.get('website'),
-            'telefono': lugar.get('phone'),
-            'email_contacto': lugar.get('email'),
+            'campana_id': id_campana, 'nombre_negocio': lugar.get('title'),
+            'url_google_maps': lugar.get('url'), 'url_sitio_web': lugar.get('website'),
+            'telefono': lugar.get('phone'), 'email_contacto': lugar.get('email'),
             'estado_prospecto': 'cazado'
         }
         try:
@@ -98,7 +89,7 @@ def main():
     CLIENTE_IDEAL = "Arquitectos y desarrolladores inmobiliarios"
     UBICACION = "Miami, Florida"
     PROSPECTOS_POR_DIA = 20
-    ID_CAMPANA_ACTUAL = 1 # Usaremos la campaña de prueba
+    ID_CAMPANA_ACTUAL = 1
 
     print("--- INICIO DE MISIÓN DEL CAZADOR ESTRATÉGICO v2.0 ---")
     
@@ -116,9 +107,6 @@ def main():
     
     print("\n🎉 ¡MISIÓN DEL CAZADOR ESTRATÉGICO COMPLETADA!")
 
-# --- Ejecutamos la función principal ---
-if __name__ == "__main__":
-    main()
 # --- Ejecutamos la función principal en un bucle infinito ---
 if __name__ == "__main__":
     while True:
@@ -128,6 +116,5 @@ if __name__ == "__main__":
             print(f"Ocurrió un error en el ciclo principal: {e}")
         
         # El trabajador se "duerme" por 1 hora antes de volver a buscar trabajo.
-        # En el futuro, el Orquestador lo despertará directamente.
-        print("\nAnalista en modo de espera por 1 hora...")
+        print("\nCazador en modo de espera por 1 hora...")
         time.sleep(3600)
