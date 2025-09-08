@@ -1,12 +1,12 @@
 import os, json, time
-from postgrest import PostgrestClient
+from postgrest import Postgrest # ¡CORRECCIÓN!
 from apify_client import ApifyClient
 import google.generativeai as genai
 
 def inicializar_servicios():
     supabase_url = os.environ.get("SUPABASE_URL")
     supabase_key = os.environ.get("SUPABASE_KEY")
-    supabase = PostgrestClient(base_url=supabase_url, headers={"apikey": supabase_key})
+    supabase = Postgrest(base_url=supabase_url, headers={"apikey": supabase_key}) # ¡CORRECCIÓN!
 
     apify_key = os.environ.get("APIFY_KEY")
     apify_client = ApifyClient(apify_key)
@@ -52,11 +52,9 @@ def guardar_prospectos(supabase, prospectos, id_campana):
     for lugar in prospectos:
         prospecto_data = {'campana_id': id_campana, 'nombre_negocio': lugar.get('title'), 'url_google_maps': lugar.get('url'), 'url_sitio_web': lugar.get('website'), 'telefono': lugar.get('phone'), 'email_contacto': lugar.get('email'), 'estado_prospecto': 'cazado'}
         try:
-            # Postgrest usa una sintaxis ligeramente diferente
             supabase.from_("prospectos").insert(prospecto_data).execute()
             contador += 1
         except Exception as e:
-            # Ignorar duplicados (el error contendrá 'duplicate key value violates unique constraint')
             pass
     print(f"\n👍 Se han guardado {contador} nuevos prospectos.")
 
@@ -64,7 +62,6 @@ def main():
     print("--- INICIO DE MISIÓN DEL CAZADOR ESTRATÉGICO (Postgrest Edition) ---")
     supabase, apify_client, model_ia = inicializar_servicios()
     
-    # Buscamos una campaña en estado 'cazando'
     response = supabase.from_("campanas").select("*").eq('estado_campana', 'cazando').limit(1).execute()
     if not response.data:
         print("No hay campañas activas para cazar.")
@@ -80,7 +77,6 @@ def main():
         resultados = ejecutar_caza(apify_client, plan, limite)
         if resultados:
             guardar_prospectos(supabase, resultados, campana['id'])
-            # Cambiamos el estado para que el Analista pueda empezar
             supabase.from_("campanas").update({'estado_campana': 'analizando'}).eq('id', campana['id']).execute()
 
     print("\n🎉 ¡MISIÓN DEL CAZADOR COMPLETADA!")
