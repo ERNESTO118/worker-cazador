@@ -1,3 +1,4 @@
 postgrest
 apify-client
 google-generativeai
+supabase
