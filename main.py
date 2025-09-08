@@ -55,7 +55,6 @@ def main():
     print("--- INICIO DE MISIÓN DEL CAZADOR ESTRATÉGICO ---")
     supabase, apify_client, model_ia = inicializar_servicios()
     
-    # Buscamos una campaña que esté en estado 'cazando'
     response = supabase.table('campanas').select('*').eq('estado_campana', 'cazando').limit(1).execute()
     if not response.data:
         print("No hay campañas activas para cazar.")
@@ -71,7 +70,6 @@ def main():
         resultados = ejecutar_caza(apify_client, plan, limite)
         if resultados:
             guardar_prospectos(supabase, resultados, campana['id'])
-            # Cambiamos el estado para que el Analista pueda empezar
             supabase.table('campanas').update({'estado_campana': 'analizando'}).eq('id', campana['id']).execute()
 
     print("\n🎉 ¡MISIÓN DEL CAZADOR COMPLETADA!")
