@@ -1,0 +1,10 @@
+# fly.toml file generated for worker-cazador on 2025-09-09T22:30:00-04:00
+
+app = "worker-cazador"
+primary_region = "dfw"
+
+[build]
+  builder = "dockerfile"
+
+[processes]
+  app = "python main.py"
