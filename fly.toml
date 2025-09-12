@@ -4,7 +4,7 @@ app = "worker-cazador"
 primary_region = "dfw"
 
 [build]
-  builder = "dockerfile"
+  builder = "paketobuildpacks/builder:base"
 
 [processes]
   app = "python main.py"
